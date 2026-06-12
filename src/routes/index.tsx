@@ -1,259 +1,142 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import {
-  Infinity as InfinityIcon, Flame, CalendarDays, Moon, Bell, BarChart3, CloudUpload,
-  CheckCircle2, TrendingUp, Sparkles, ArrowRight, Star, Quote,
+  Stethoscope, Upload, Search, MapPin, Pill, ShieldCheck, Sparkles,
+  ScanLine, Brain, FileText, ChevronDown, Mail, ArrowRight,
 } from "lucide-react";
-import heroBg from "@/assets/hero-bg.jpg";
-import shadowBg from "@/assets/shadow-bg.jpg";
-
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
   head: () => ({
     meta: [
-      { title: "Continuum — Build lasting habits, one day at a time" },
-      { name: "description", content: "A calm, focused habit tracker. Track streaks, visualize progress, and build your daily ritual. Free, ad-free, distraction-free." },
+      { title: "Prescripto AI — Understand your prescriptions, instantly" },
+      { name: "description", content: "AI-powered prescription analysis, universal medicine search, and doctor finder. Built for patients who want clarity." },
     ],
   }),
 });
 
 function LandingPage() {
-  const navigate = useNavigate();
-  const [checked, setChecked] = useState(false);
-
-  useEffect(() => {
-    import("@/integrations/supabase/client").then(({ supabase }) => {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session?.user) {
-          navigate({ to: "/app" });
-        } else {
-          setChecked(true);
-        }
-      });
-    }).catch(() => setChecked(true));
-  }, [navigate]);
-
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <Nav />
       <Hero />
       <Features />
       <HowItWorks />
-      <Reviews />
-      <FinalCTA />
+      <MedicineIntelligence />
+      <DoctorFinder />
+      <FAQ />
+      <Contact />
       <Footer />
     </div>
   );
 }
 
-/* ─── Hero (dark, full-bleed, with navbar) ─── */
+function Nav() {
+  return (
+    <header className="sticky top-0 z-40 backdrop-blur-md bg-background/80 border-b border-border/60">
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+            <Stethoscope className="w-4.5 h-4.5 text-primary-foreground" strokeWidth={2.5} />
+          </div>
+          <span className="font-bold tracking-tight text-lg">Prescripto<span className="text-primary"> AI</span></span>
+        </Link>
+        <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
+          <a href="#features" className="hover:text-foreground transition">Features</a>
+          <a href="#how" className="hover:text-foreground transition">How it works</a>
+          <a href="#medicines" className="hover:text-foreground transition">Medicines</a>
+          <a href="#doctors" className="hover:text-foreground transition">Doctors</a>
+          <a href="#faq" className="hover:text-foreground transition">FAQ</a>
+        </nav>
+        <div className="flex items-center gap-2">
+          <Link to="/login" className="text-sm font-medium px-3 py-2 hover:text-primary transition">Sign in</Link>
+          <Link to="/app" className="text-sm font-semibold bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition">Get started</Link>
+        </div>
+      </div>
+    </header>
+  );
+}
+
 function Hero() {
   return (
-    <>
-      <section className="relative pb-24 pt-0 lg:pb-32 lg:pt-8 xl:pb-40 xl:pt-12" style={{ background: "#050d0a" }}>
-        {/* Background image — weighted to the right */}
-        <img
-          src={heroBg}
-          alt=""
-          width={1920}
-          height={1080}
-          className="absolute inset-0 w-full h-full object-cover object-right pointer-events-none select-none"
-          aria-hidden="true"
-        />
-        {/* Left-side gradient for text legibility */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: `linear-gradient(to right, rgba(5,13,10,0.5), rgba(5,13,10,0.13), transparent)` }} />
-        <div className="absolute inset-0 pointer-events-none" style={{ background: `linear-gradient(to bottom, rgba(0,0,0,0.26), transparent, rgba(5,13,10,0))` }} />
-
-        {/* Navbar */}
-        <nav className="relative z-20 max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <InfinityIcon className="w-7 h-7 text-white" strokeWidth={2.5} />
-            <span className="text-xl font-semibold text-white/90 tracking-tight">Continuum</span>
-          </Link>
-
-          <div className="hidden sm:flex items-center gap-8 text-sm text-white">
-            <a href="#features" className="hover:text-white/70 transition-colors">Features</a>
-            <a href="#how-it-works" className="hover:text-white/70 transition-colors">How it works</a>
-            <a href="#reviews" className="hover:text-white/70 transition-colors">Reviews</a>
-          </div>
-
-          <Link
-            to="/login"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-white/30 bg-white/10 text-white px-5 py-2.5 text-sm font-medium hover:bg-white/20 backdrop-blur-sm transition-all duration-200 active:scale-[0.97]"
-          >
-            Get started
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </nav>
-
-        {/* Hero content — left aligned */}
-        <div className="relative z-10 max-w-5xl mx-auto px-5 pt-24 pb-12">
-          <div className="max-w-xl">
-            <ScrollReveal delay={80}>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white text-left" style={{ lineHeight: "1.08" }}>
-                Build lasting habits,<br />one day at a time
-              </h1>
-            </ScrollReveal>
-
-            <ScrollReveal delay={160}>
-              <p className="mt-6 text-lg text-white text-left" style={{ textWrap: "pretty", lineHeight: "1.6" }}>
-                Continuum is a calm, focused habit tracker that helps you build consistency through streaks, visual progress, and zero distractions.
-              </p>
-            </ScrollReveal>
-
-            <ScrollReveal delay={240}>
-              <div className="mt-10 flex flex-col sm:flex-row items-start gap-3">
-                <Link
-                  to="/login"
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#FDAA3E] text-[#1a1a1a] px-7 py-3.5 text-sm font-bold hover:bg-[#fdb95e] transition-all duration-200 active:scale-[0.97] shadow-lg shadow-[#FDAA3E]/25"
-                >
-                  Get started free
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </ScrollReveal>
-          </div>
+    <section className="relative overflow-hidden">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--color-accent),_transparent_60%)] opacity-50" />
+      <div className="max-w-6xl mx-auto px-6 pt-20 pb-24 text-center">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card/60 backdrop-blur text-xs font-medium text-muted-foreground mb-6">
+          <Sparkles className="w-3.5 h-3.5 text-primary" /> AI-powered healthcare clarity
         </div>
-      </section>
-    </>
+        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight max-w-4xl mx-auto leading-[1.05]">
+          Understand your prescription <span className="text-primary">in plain English</span>
+        </h1>
+        <p className="text-lg text-muted-foreground mt-6 max-w-2xl mx-auto">
+          Upload a prescription, and Prescripto AI extracts the handwriting, explains each medicine, flags interactions, and helps you find the right doctor — instantly.
+        </p>
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+          <Link to="/app" className="group inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold px-6 py-3.5 rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:-translate-y-0.5 transition">
+            <ScanLine className="w-4 h-4" /> Analyze Prescription
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+          </Link>
+          <Link to="/app" className="inline-flex items-center gap-2 bg-card border border-border font-semibold px-6 py-3.5 rounded-xl hover:bg-accent/40 transition">
+            <Search className="w-4 h-4" /> Search Medicines
+          </Link>
+          <Link to="/app" className="inline-flex items-center gap-2 bg-card border border-border font-semibold px-6 py-3.5 rounded-xl hover:bg-accent/40 transition">
+            <MapPin className="w-4 h-4" /> Find Doctors
+          </Link>
+        </div>
+        <p className="text-xs text-muted-foreground mt-6 flex items-center justify-center gap-1.5">
+          <ShieldCheck className="w-3.5 h-3.5" /> Information only. Not a substitute for medical advice.
+        </p>
+      </div>
+    </section>
   );
 }
-
-/* ─── Features ─── */
-const features = [
-  { icon: Flame, title: "Streak tracking", desc: "Watch your momentum build day by day. Never break the chain." },
-  { icon: CalendarDays, title: "Calendar heatmap", desc: "See your consistency at a glance with a beautiful 30-day view." },
-  { icon: BarChart3, title: "Smart insights", desc: "Current streak, longest streak, completion rate — all the stats that matter." },
-  { icon: Bell, title: "Gentle reminders", desc: "Set custom reminder times so you never forget your daily rituals." },
-  { icon: Moon, title: "Dark mode", desc: "Easy on the eyes, day or night. Follows your system or your choice." },
-  { icon: CloudUpload, title: "Cloud sync", desc: "Sign in to sync your habits across devices. Your data, always safe." },
-];
 
 function Features() {
+  const items = [
+    { icon: ScanLine, title: "Prescription OCR", desc: "Reads even messy doctor handwriting from photos and PDFs with multimodal AI." },
+    { icon: Brain, title: "AI explanation", desc: "Each medicine explained in plain language — purpose, dosage, side effects, warnings." },
+    { icon: Pill, title: "Drug intelligence", desc: "Backed by OpenFDA & RxNorm. Interactions, alternatives, and composition at a glance." },
+    { icon: MapPin, title: "Doctor finder", desc: "Find verified doctors by name, city, or specialization with maps and ratings." },
+    { icon: ShieldCheck, title: "Private by design", desc: "Your prescriptions are encrypted and only visible to you." },
+    { icon: FileText, title: "Saved history", desc: "Every analysis kept in your account so you never lose track of a medication." },
+  ];
   return (
-    <section id="features" className="py-28 relative bg-white">
-      <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: `url(${shadowBg})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', opacity: 0.75 }} />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="max-w-6xl mx-auto px-5 relative">
-        <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-16">
-          {/* Left: App preview — light mode on mint bg */}
-          <div className="w-full lg:w-[420px] flex-shrink-0">
-            <div className="relative">
-              <div className="rounded-xl bg-white border border-black/[0.06] shadow-xl overflow-hidden">
-                {/* Mock browser chrome */}
-                <div className="border-b border-black/5 px-5 py-3 flex items-center gap-3 bg-gray-50/80">
-                  <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-black/10" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-black/10" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-black/10" />
-                  </div>
-                  <div className="flex-1" />
-                </div>
-
-                {/* Mock app content — light mode */}
-                <div className="p-6 space-y-4">
-                  <div>
-                    <p className="text-xs text-black/40">Good morning</p>
-                    <p className="text-lg font-semibold text-black/90 mt-0.5">Your daily ritual</p>
-                    <p className="text-xs text-black/40 mt-1">Tuesday, March 25 · 2 of 4 minted</p>
-                  </div>
-
-                  {/* Mock progress ring */}
-                  <div className="flex justify-center py-3">
-                    <div className="w-20 h-20 rounded-full border-[4px] border-black/[0.06] flex items-center justify-center relative">
-                      <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 80 80">
-                        <circle cx="40" cy="40" r="35" fill="none" strokeWidth="4" stroke="#FDAA3E" strokeDasharray="220" strokeDashoffset="110" strokeLinecap="round" />
-                      </svg>
-                      <span className="text-lg font-bold text-black/80">50%</span>
-                    </div>
-                  </div>
-
-                  {/* Mock habit cards */}
-                  {[
-                    { name: "Morning meditation", color: "#FDAA3E", done: true },
-                    { name: "Read 20 pages", color: "hsl(217, 91%, 60%)", done: true },
-                    { name: "Exercise 30 min", color: "hsl(25, 95%, 53%)", done: false },
-                    { name: "Journal", color: "hsl(270, 95%, 75%)", done: false },
-                  ].map((h) => (
-                    <div key={h.name} className="flex items-center gap-3 rounded-xl border border-black/[0.06] bg-black/[0.02] px-4 py-3">
-                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: h.color }} />
-                      <span className={`flex-1 text-sm ${h.done ? "line-through text-black/30" : "text-black/70"}`}>{h.name}</span>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${h.done ? "bg-primary border-primary" : "border-black/15"}`}>
-                        {h.done && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+    <section id="features" className="max-w-6xl mx-auto px-6 py-20">
+      <SectionHeader eyebrow="Features" title="A complete healthcare companion" subtitle="Six capabilities working together to bring clarity to every prescription." />
+      <div className="grid md:grid-cols-3 gap-5 mt-12">
+        {items.map((f) => (
+          <div key={f.title} className="p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:-translate-y-0.5 transition">
+            <div className="w-10 h-10 rounded-lg bg-accent/60 flex items-center justify-center mb-4">
+              <f.icon className="w-5 h-5 text-primary" strokeWidth={2.25} />
             </div>
+            <h3 className="font-semibold text-base">{f.title}</h3>
+            <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{f.desc}</p>
           </div>
-
-          {/* Right: Features content */}
-          <div className="flex-1">
-            <ScrollReveal>
-              <div className="mb-10">
-                <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Features</p>
-                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground" style={{ lineHeight: "1.15" }}>
-                  Everything you need,<br />nothing you don't
-                </h2>
-              </div>
-            </ScrollReveal>
-
-            <div className="grid sm:grid-cols-2 gap-5">
-              {features.map((f, i) => (
-                <ScrollReveal key={f.title} delay={i * 70}>
-                  <div className="group rounded-2xl border border-black/[0.04] bg-black/[0.03] p-5 hover:bg-black/[0.05] hover:border-black/[0.08] transition-all duration-300">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform duration-300">
-                      <f.icon className="w-5 h-5 text-primary" />
-                    </div>
-                    <h3 className="font-semibold text-foreground mb-1">{f.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
     </section>
   );
 }
-
-/* ─── How it works ─── */
-const steps = [
-  { num: "1", icon: CheckCircle2, title: "Create your habits", desc: "Add the habits you want to build — daily, specific days, or a weekly goal." },
-  { num: "2", icon: Sparkles, title: "Tap to complete", desc: "One tap each day to log your progress. Quick, satisfying, done." },
-  { num: "3", icon: TrendingUp, title: "Watch your growth", desc: "See streaks grow, heatmaps fill in, and your consistency compound over time." },
-];
 
 function HowItWorks() {
+  const steps = [
+    { n: "01", icon: Upload, title: "Upload", desc: "Drop a JPG, PNG, or PDF of your prescription." },
+    { n: "02", icon: ScanLine, title: "Extract", desc: "OCR reads the handwritten text and structures it." },
+    { n: "03", icon: Brain, title: "Analyze", desc: "AI identifies medicines, dosage, frequency, and warnings." },
+    { n: "04", icon: FileText, title: "Understand", desc: "You get a patient-friendly summary you can act on." },
+  ];
   return (
-    <section id="how-it-works" className="py-28 bg-white border-y border-border/30">
-      <div className="max-w-4xl mx-auto px-5">
-        <ScrollReveal>
-          <div className="text-center mb-16">
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">How it works</p>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground" style={{ lineHeight: "1.15" }}>
-              Three steps to a better routine
-            </h2>
-          </div>
-        </ScrollReveal>
-
-        <div className="relative grid md:grid-cols-3 gap-8">
-          {/* Connecting line between steps (desktop only) */}
-          <div className="hidden md:block absolute top-7 left-[calc(16.67%+28px)] right-[calc(16.67%+28px)] h-px border-t-2 border-dashed border-primary/20" />
-
-          {steps.map((s, i) => (
-            <ScrollReveal key={s.num} delay={i * 100}>
-              <div className="text-center relative">
-                <div className="w-14 h-14 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center mx-auto mb-5 text-lg font-bold shadow-lg shadow-primary/15">
-                  {s.num}
-                </div>
-                <h3 className="font-semibold text-foreground text-lg mb-2">{s.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto">{s.desc}</p>
-              </div>
-            </ScrollReveal>
+    <section id="how" className="bg-secondary/40 border-y border-border/60">
+      <div className="max-w-6xl mx-auto px-6 py-20">
+        <SectionHeader eyebrow="How it works" title="From paper to plain English in seconds" subtitle="Four steps. Zero medical jargon." />
+        <div className="grid md:grid-cols-4 gap-4 mt-12">
+          {steps.map((s) => (
+            <div key={s.n} className="p-6 rounded-2xl bg-card border border-border">
+              <div className="text-xs font-mono text-primary font-bold">{s.n}</div>
+              <s.icon className="w-6 h-6 text-foreground mt-3" strokeWidth={2} />
+              <h3 className="font-semibold mt-3">{s.title}</h3>
+              <p className="text-sm text-muted-foreground mt-1">{s.desc}</p>
+            </div>
           ))}
         </div>
       </div>
@@ -261,49 +144,58 @@ function HowItWorks() {
   );
 }
 
-/* ─── Reviews ─── */
-const reviews = [
-  { name: "Daniel Cooper", role: "Product designer", avatar: "https://trovdwfeqyzlxzrtfbjv.supabase.co/storage/v1/object/public/assets/avatars/e20b66f6-e7e9-4c00-93d3-506c78cb66c2/avatar-19.jpg", quote: "Finally a habit app that doesn't try to be a social network. Just me and my habits.", rating: 5 },
-  { name: "Emma Lindström", role: "Software engineer", avatar: "https://trovdwfeqyzlxzrtfbjv.supabase.co/storage/v1/object/public/assets/avatars/307e7512-1637-4ea2-a5cd-875afeb1002b/avatar-21.jpg", quote: "The streak tracking is addictive in the best way. I've been consistent for 47 days now.", rating: 5 },
-  { name: "Ryan Mitchell", role: "Grad student", avatar: "https://trovdwfeqyzlxzrtfbjv.supabase.co/storage/v1/object/public/assets/avatars/6b77ccde-dbfd-4c23-8c9f-ce748683068a/avatar-16.jpg", quote: "Love the heatmap. Seeing my progress visually keeps me motivated more than any badge system.", rating: 5 },
-  { name: "Mei Lin", role: "Freelance writer", avatar: "https://trovdwfeqyzlxzrtfbjv.supabase.co/storage/v1/object/public/assets/avatars/b706d9a7-3a45-4fdd-ab47-c7023d4d0cfa/avatar-20.jpg", quote: "Simple, clean, no ads. This is what every habit tracker should be. Dark mode is gorgeous too.", rating: 5 },
-];
-
-function Reviews() {
+function MedicineIntelligence() {
   return (
-    <section id="reviews" className="py-28">
-      <div className="max-w-5xl mx-auto px-5">
-        <ScrollReveal>
-          <div className="text-center mb-16">
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Reviews</p>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground" style={{ lineHeight: "1.15" }}>
-              Loved by habit builders
-            </h2>
+    <section id="medicines" className="max-w-6xl mx-auto px-6 py-20">
+      <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <SectionHeader eyebrow="Medicine intelligence" title="Search any medicine. Get the full picture." subtitle="Generic names, brand alternatives, uses, side effects, interactions, pregnancy warnings — all in one place." align="left" />
+          <ul className="mt-6 space-y-3 text-sm">
+            {["Dolo 650","Paracetamol","Azithromycin","Metformin","Amoxicillin"].map((m) => (
+              <li key={m} className="flex items-center gap-2 text-muted-foreground">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary" /> {m}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-xl shadow-primary/5">
+          <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-secondary text-sm">
+            <Search className="w-4 h-4 text-muted-foreground" />
+            <span className="text-muted-foreground">Search Amoxicillin…</span>
           </div>
-        </ScrollReveal>
+          <div className="mt-5 space-y-3">
+            <Row k="Generic" v="Amoxicillin" />
+            <Row k="Uses" v="Bacterial infections" />
+            <Row k="Dosage" v="500 mg, 3× daily" />
+            <Row k="Side effects" v="Nausea, diarrhea, rash" />
+            <Row k="Warnings" v="Avoid if allergic to penicillin" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-        <div className="grid sm:grid-cols-2 gap-5">
-          {reviews.map((r, i) => (
-            <ScrollReveal key={r.name} delay={i * 80}>
-              <div className="relative rounded-2xl border border-border/50 bg-card p-6 overflow-hidden">
-                {/* Decorative quote mark */}
-                <Quote className="absolute top-4 right-4 w-10 h-10 text-primary/[0.06] rotate-180" />
+function Row({ k, v }: { k: string; v: string }) {
+  return (
+    <div className="flex items-start justify-between gap-4 text-sm pb-3 border-b border-border last:border-0">
+      <span className="text-muted-foreground">{k}</span>
+      <span className="font-medium text-right">{v}</span>
+    </div>
+  );
+}
 
-                <div className="flex gap-0.5 mb-4">
-                  {Array.from({ length: r.rating }).map((_, j) => (
-                    <Star key={j} className="w-4 h-4 fill-primary text-primary" />
-                  ))}
-                </div>
-                <p className="text-sm text-foreground leading-relaxed mb-5 relative">"{r.quote}"</p>
-                <div className="flex items-center gap-3">
-                  <img src={r.avatar} alt={r.name} className="w-[4.5rem] h-[4.5rem] rounded-full object-cover" loading="lazy" />
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{r.name}</p>
-                    <p className="text-xs text-muted-foreground">{r.role}</p>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
+function DoctorFinder() {
+  return (
+    <section id="doctors" className="bg-secondary/40 border-y border-border/60">
+      <div className="max-w-6xl mx-auto px-6 py-20">
+        <SectionHeader eyebrow="Doctor finder" title="The right specialist, near you" subtitle="Search by name, city, or specialization. Maps, ratings, and contact info — all in one view." />
+        <div className="mt-10 grid sm:grid-cols-3 gap-4">
+          {["Cardiologist in Delhi","Dermatologist in Noida","Pediatrician in Mumbai"].map((q) => (
+            <div key={q} className="p-5 rounded-xl bg-card border border-border flex items-center gap-3">
+              <MapPin className="w-5 h-5 text-primary" />
+              <span className="text-sm font-medium">{q}</span>
+            </div>
           ))}
         </div>
       </div>
@@ -311,70 +203,78 @@ function Reviews() {
   );
 }
 
-/* ─── Final CTA ─── */
-function FinalCTA() {
+function FAQ() {
+  const qs = [
+    { q: "Is Prescripto AI a substitute for a doctor?", a: "No. Prescripto AI helps you understand prescriptions, but it does not replace professional medical advice, diagnosis, or treatment." },
+    { q: "What file types can I upload?", a: "JPG, PNG, JPEG, and PDF. Clear photos work best for handwritten prescriptions." },
+    { q: "Where does medicine information come from?", a: "We combine OpenFDA, RxNorm, and NIH medication APIs with AI-generated patient-friendly explanations." },
+    { q: "Are my prescriptions private?", a: "Yes. Your files and analyses are stored securely and visible only to you." },
+    { q: "Is it free to use?", a: "The core experience is free. Heavy usage may be metered to keep AI costs sustainable." },
+  ];
   return (
-    <section className="relative overflow-hidden py-28" style={{ background: "#050d0a" }}>
-      {/* Reuse hero bg for visual cohesion */}
-      <img
-        src={heroBg}
-        alt=""
-        width={1920}
-        height={1080}
-        loading="lazy"
-        className="absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none select-none"
-        aria-hidden="true"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#050d0a] via-transparent to-[#050d0a] pointer-events-none" />
-
-      <div className="relative z-10 max-w-2xl mx-auto px-5 text-center">
-        <ScrollReveal>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white" style={{ lineHeight: "1.15" }}>
-            Ready to build better habits?
-          </h2>
-          <p className="mt-4 text-white max-w-md mx-auto" style={{ textWrap: "pretty" }}>
-            Join thousands of people using Continuum to build consistency, one day at a time.
-          </p>
-          <Link
-            to="/login"
-            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#FDAA3E] text-[#1a1a1a] px-8 py-4 text-sm font-semibold hover:bg-[#fdb95e] transition-all duration-200 active:scale-[0.97] shadow-lg shadow-[#FDAA3E]/25"
-          >
-            Get started free
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </ScrollReveal>
+    <section id="faq" className="max-w-3xl mx-auto px-6 py-20">
+      <SectionHeader eyebrow="FAQ" title="Common questions" />
+      <div className="mt-10 space-y-3">
+        {qs.map((item, i) => (
+          <FaqItem key={i} q={item.q} a={item.a} />
+        ))}
       </div>
     </section>
   );
 }
 
-/* ─── Footer ─── */
+function FaqItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <button onClick={() => setOpen(!open)} className="w-full text-left p-5 rounded-xl border border-border bg-card hover:bg-accent/30 transition">
+      <div className="flex items-center justify-between gap-4">
+        <span className="font-medium">{q}</span>
+        <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
+      </div>
+      {open && <p className="text-sm text-muted-foreground mt-3 leading-relaxed">{a}</p>}
+    </button>
+  );
+}
+
+function Contact() {
+  return (
+    <section id="contact" className="bg-secondary/40 border-y border-border/60">
+      <div className="max-w-3xl mx-auto px-6 py-20 text-center">
+        <SectionHeader eyebrow="Contact" title="Talk to us" subtitle="Questions, partnerships, or feedback? We'd love to hear from you." />
+        <a href="mailto:hello@prescripto.ai" className="inline-flex items-center gap-2 mt-6 bg-primary text-primary-foreground font-semibold px-5 py-3 rounded-xl hover:opacity-90 transition">
+          <Mail className="w-4 h-4" /> hello@prescripto.ai
+        </a>
+      </div>
+    </section>
+  );
+}
+
 function Footer() {
   return (
-    <footer className="border-t border-border/40 py-12">
-      <div className="max-w-5xl mx-auto px-5">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2">
-            <InfinityIcon className="w-6 h-6 text-foreground" strokeWidth={2.5} />
-            <span className="font-semibold text-foreground text-sm">Continuum</span>
+    <footer className="border-t border-border">
+      <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
+            <Stethoscope className="w-4 h-4 text-primary-foreground" />
           </div>
-
-          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <a href="#features" className="hover:text-foreground transition-colors">Features</a>
-            <a href="#how-it-works" className="hover:text-foreground transition-colors">How it works</a>
-            <a href="#reviews" className="hover:text-foreground transition-colors">Reviews</a>
-            <Link to="/login" className="hover:text-foreground transition-colors">Sign in</Link>
-            <Link to="/login" className="hover:text-foreground transition-colors">Get started</Link>
-          </div>
-
-          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} Continuum</p>
+          <span className="font-semibold text-foreground">Prescripto AI</span>
         </div>
+        <p>© {new Date().getFullYear()} Prescripto AI. For informational purposes only.</p>
       </div>
     </footer>
   );
 }
 
-/* ─── Scroll reveal wrapper (animations removed) ─── */
-function ScrollReveal({ children }: { children: React.ReactNode; delay?: number }) {
-  return <>{children}</>;
+function SectionHeader({ eyebrow, title, subtitle, align = "center" }: { eyebrow: string; title: string; subtitle?: string; align?: "center" | "left" }) {
+  const cls = align === "center" ? "text-center mx-auto" : "text-left";
+  return (
+    <div className={`${cls} max-w-2xl`}>
+      <div className="text-xs font-bold uppercase tracking-widest text-primary">{eyebrow}</div>
+      <h2 className="text-3xl md:text-4xl font-bold tracking-tight mt-3">{title}</h2>
+      {subtitle && <p className="text-muted-foreground mt-3 text-base">{subtitle}</p>}
+    </div>
+  );
 }
+
+// avoid unused-import warning during phase 1
+void useEffect;

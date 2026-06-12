@@ -82,6 +82,42 @@ export type Database = {
         }
         Relationships: []
       }
+      prescriptions: {
+        Row: {
+          analysis: Json | null
+          created_at: string
+          id: string
+          image_url: string | null
+          ocr_text: string | null
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          analysis?: Json | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          ocr_text?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          analysis?: Json | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          ocr_text?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -100,6 +136,78 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+        }
+        Relationships: []
+      }
+      saved_doctors: {
+        Row: {
+          address: string | null
+          created_at: string
+          data: Json | null
+          id: string
+          lat: number | null
+          lng: number | null
+          name: string
+          phone: string | null
+          place_id: string | null
+          rating: number | null
+          specialization: string | null
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          data?: Json | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          name: string
+          phone?: string | null
+          place_id?: string | null
+          rating?: number | null
+          specialization?: string | null
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          data?: Json | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          name?: string
+          phone?: string | null
+          place_id?: string | null
+          rating?: number | null
+          specialization?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      saved_medicines: {
+        Row: {
+          created_at: string
+          data: Json | null
+          generic_name: string | null
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json | null
+          generic_name?: string | null
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json | null
+          generic_name?: string | null
+          id?: string
+          name?: string
+          user_id?: string
         }
         Relationships: []
       }
