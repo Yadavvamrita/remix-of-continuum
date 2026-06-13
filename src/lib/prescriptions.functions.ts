@@ -66,19 +66,19 @@ If the image is not a prescription, return {"ocr_text":"","medicines":[],"diagno
 
     const { data: row, error } = await supabase
       .from("prescriptions")
-      .insert({
+      .insert([{
         user_id: userId,
         title: data.title || "Prescription analysis",
         image_url: data.imageUrl,
         ocr_text: typeof parsed.ocr_text === "string" ? parsed.ocr_text : null,
-        analysis: parsed,
+        analysis: parsed as never,
         status: "completed",
-      })
+      }])
       .select()
       .single();
     if (error) throw new Error(error.message);
 
-    return { id: row.id, analysis: parsed };
+    return { id: row.id as string, analysis: parsed as Record<string, unknown> };
   });
 
 export const listPrescriptions = createServerFn({ method: "POST" })
