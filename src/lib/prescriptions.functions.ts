@@ -78,7 +78,7 @@ If the image is not a prescription, return {"ocr_text":"","medicines":[],"diagno
       .single();
     if (error) throw new Error(error.message);
 
-    return { id: row.id as string, analysis: parsed as { [k: string]: unknown } };
+    return { id: row.id as string, analysis: parsed as { [k: string]: {} } };
   });
 
 export const listPrescriptions = createServerFn({ method: "POST" })
