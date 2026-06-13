@@ -10,14 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as MedicinesRouteImport } from './routes/medicines'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as InsightsRouteImport } from './routes/insights'
+import { Route as DoctorsRouteImport } from './routes/doctors'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as AnalyzeRouteImport } from './routes/analyze'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MedicinesRoute = MedicinesRouteImport.update({
+  id: '/medicines',
+  path: '/medicines',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -30,9 +38,19 @@ const InsightsRoute = InsightsRouteImport.update({
   path: '/insights',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DoctorsRoute = DoctorsRouteImport.update({
+  id: '/doctors',
+  path: '/doctors',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyzeRoute = AnalyzeRouteImport.update({
+  id: '/analyze',
+  path: '/analyze',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -43,39 +61,76 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analyze': typeof AnalyzeRoute
   '/app': typeof AppRoute
+  '/doctors': typeof DoctorsRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
+  '/medicines': typeof MedicinesRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analyze': typeof AnalyzeRoute
   '/app': typeof AppRoute
+  '/doctors': typeof DoctorsRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
+  '/medicines': typeof MedicinesRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analyze': typeof AnalyzeRoute
   '/app': typeof AppRoute
+  '/doctors': typeof DoctorsRoute
   '/insights': typeof InsightsRoute
   '/login': typeof LoginRoute
+  '/medicines': typeof MedicinesRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/insights' | '/login' | '/settings'
+  fullPaths:
+    | '/'
+    | '/analyze'
+    | '/app'
+    | '/doctors'
+    | '/insights'
+    | '/login'
+    | '/medicines'
+    | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/insights' | '/login' | '/settings'
-  id: '__root__' | '/' | '/app' | '/insights' | '/login' | '/settings'
+  to:
+    | '/'
+    | '/analyze'
+    | '/app'
+    | '/doctors'
+    | '/insights'
+    | '/login'
+    | '/medicines'
+    | '/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/analyze'
+    | '/app'
+    | '/doctors'
+    | '/insights'
+    | '/login'
+    | '/medicines'
+    | '/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalyzeRoute: typeof AnalyzeRoute
   AppRoute: typeof AppRoute
+  DoctorsRoute: typeof DoctorsRoute
   InsightsRoute: typeof InsightsRoute
   LoginRoute: typeof LoginRoute
+  MedicinesRoute: typeof MedicinesRoute
   SettingsRoute: typeof SettingsRoute
 }
 
@@ -86,6 +141,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/medicines': {
+      id: '/medicines'
+      path: '/medicines'
+      fullPath: '/medicines'
+      preLoaderRoute: typeof MedicinesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -102,11 +164,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InsightsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/doctors': {
+      id: '/doctors'
+      path: '/doctors'
+      fullPath: '/doctors'
+      preLoaderRoute: typeof DoctorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
       fullPath: '/app'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analyze': {
+      id: '/analyze'
+      path: '/analyze'
+      fullPath: '/analyze'
+      preLoaderRoute: typeof AnalyzeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -121,9 +197,12 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalyzeRoute: AnalyzeRoute,
   AppRoute: AppRoute,
+  DoctorsRoute: DoctorsRoute,
   InsightsRoute: InsightsRoute,
   LoginRoute: LoginRoute,
+  MedicinesRoute: MedicinesRoute,
   SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
