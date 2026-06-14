@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, Loader2, MapPin, Phone, Bookmark, ArrowLeft, ExternalLink } from "lucide-react";
+import { Search, Loader2, MapPin, Phone, Bookmark, ArrowLeft, ExternalLink, Star, Globe } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { AppShell } from "@/components/app-shell";
@@ -63,7 +63,7 @@ function DoctorsPage() {
       </form>
 
       {center && (
-        <p className="text-xs text-muted-foreground mt-3">Showing results within 5 km of <b>{center.name}</b></p>
+        <p className="text-xs text-muted-foreground mt-3">Showing top matches near <b>{center.name}</b></p>
       )}
 
       <div className="mt-6 grid md:grid-cols-2 gap-4">
@@ -74,6 +74,13 @@ function DoctorsPage() {
                 <div className="font-semibold flex items-center gap-2"><MapPin className="w-4 h-4 text-primary" /> {d.name}</div>
                 {d.specialization && <div className="text-xs text-muted-foreground mt-1 capitalize">{d.specialization.replace(/_/g, " ")}</div>}
                 {d.address && <div className="text-xs text-muted-foreground mt-1">{d.address}</div>}
+                {typeof d.rating === "number" && (
+                  <div className="text-xs text-muted-foreground mt-1 inline-flex items-center gap-1">
+                    <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                    <span className="font-medium text-foreground">{d.rating.toFixed(1)}</span>
+                    {d.user_ratings_total ? <span>({d.user_ratings_total})</span> : null}
+                  </div>
+                )}
                 {d.phone && <a href={`tel:${d.phone}`} className="text-xs text-primary mt-1 inline-flex items-center gap-1"><Phone className="w-3 h-3" /> {d.phone}</a>}
               </div>
               <button
@@ -87,14 +94,21 @@ function DoctorsPage() {
                 <Bookmark className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href={`https://www.openstreetmap.org/?mlat=${d.lat}&mlon=${d.lng}#map=18/${d.lat}/${d.lng}`}
-              className="text-xs text-primary inline-flex items-center gap-1 mt-3"
-            >
-              View on map <ExternalLink className="w-3 h-3" />
-            </a>
+            <div className="flex items-center gap-4 mt-3">
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={d.google_maps_uri || `https://www.google.com/maps/search/?api=1&query=${d.lat},${d.lng}&query_place_id=${d.place_id}`}
+                className="text-xs text-primary inline-flex items-center gap-1"
+              >
+                View on Google Maps <ExternalLink className="w-3 h-3" />
+              </a>
+              {d.website && (
+                <a target="_blank" rel="noreferrer" href={d.website} className="text-xs text-primary inline-flex items-center gap-1">
+                  <Globe className="w-3 h-3" /> Website
+                </a>
+              )}
+            </div>
           </div>
         ))}
       </div>

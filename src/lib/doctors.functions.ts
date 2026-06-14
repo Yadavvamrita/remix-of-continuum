@@ -9,10 +9,14 @@ export type DoctorHit = {
   phone?: string;
   lat: number;
   lng: number;
+  rating?: number;
+  user_ratings_total?: number;
+  website?: string;
+  google_maps_uri?: string;
 };
 
-// Free, no-key search using OpenStreetMap Nominatim + Overpass.
-// Searches healthcare facilities (doctors, clinics, hospitals) near a place name + specialization.
+const GATEWAY_URL = "https://connector-gateway.lovable.dev/google_maps";
+
 export const searchDoctors = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { location: string; specialization?: string }) => {
@@ -23,54 +27,80 @@ export const searchDoctors = createServerFn({ method: "POST" })
     };
   })
   .handler(async ({ data }) => {
-    // 1) Geocode the location
-    const geoRes = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(data.location)}`,
-      { headers: { "User-Agent": "Prescripto-AI/1.0" } }
-    );
-    if (!geoRes.ok) throw new Error("Geocoding failed");
-    const geo = (await geoRes.json()) as Array<{ lat: string; lon: string; display_name: string }>;
-    if (!geo.length) return { center: null, results: [] as DoctorHit[] };
-    const lat = parseFloat(geo[0].lat);
-    const lng = parseFloat(geo[0].lon);
+    const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;
+    const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
+    if (!LOVABLE_API_KEY || !GOOGLE_MAPS_API_KEY) {
+      throw new Error("Google Maps connector is not configured");
+    }
 
-    // 2) Overpass: amenities related to healthcare within ~5km
-    const radius = 5000;
-    const specFilter = data.specialization
-      ? `["healthcare:speciality"~"${data.specialization}",i]`
-      : "";
-    const query = `[out:json][timeout:25];
-(
-  node["amenity"~"doctors|clinic|hospital"]${specFilter}(around:${radius},${lat},${lng});
-  node["healthcare"~"doctor|clinic|hospital"]${specFilter}(around:${radius},${lat},${lng});
-);
-out body 30;`;
-    const opRes = await fetch("https://overpass-api.de/api/interpreter", {
+    // Build a Google-style text query. searchText handles place names,
+    // landmarks, addresses, and combined queries like "dental clinic near Sector 51 Noida".
+    const textQuery = data.specialization
+      ? `${data.specialization} doctor near ${data.location}`
+      : data.location;
+
+    const res = await fetch(`${GATEWAY_URL}/places/v1/places:searchText`, {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: "data=" + encodeURIComponent(query),
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "X-Connection-Api-Key": GOOGLE_MAPS_API_KEY,
+        "Content-Type": "application/json",
+        "X-Goog-FieldMask":
+          "places.id,places.displayName,places.formattedAddress,places.location,places.nationalPhoneNumber,places.internationalPhoneNumber,places.rating,places.userRatingCount,places.types,places.primaryTypeDisplayName,places.websiteUri,places.googleMapsUri",
+      },
+      body: JSON.stringify({
+        textQuery,
+        maxResultCount: 20,
+      }),
     });
-    if (!opRes.ok) throw new Error("Doctor search failed");
-    const op = (await opRes.json()) as { elements: Array<{ id: number; lat: number; lon: number; tags?: Record<string, string> }> };
 
-    const results: DoctorHit[] = (op.elements ?? [])
-      .filter((e) => e.tags?.name)
-      .map((e) => {
-        const t = e.tags ?? {};
-        const addr = [t["addr:housenumber"], t["addr:street"], t["addr:city"]].filter(Boolean).join(" ");
-        return {
-          place_id: String(e.id),
-          name: t.name!,
-          specialization: t["healthcare:speciality"] || t.healthcare || t.amenity,
-          address: addr || t["addr:full"] || undefined,
-          phone: t.phone || t["contact:phone"],
-          lat: e.lat,
-          lng: e.lon,
-        };
-      })
-      .slice(0, 30);
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      console.error("Places searchText failed:", res.status, text);
+      throw new Error(`Doctor search failed (${res.status})`);
+    }
 
-    return { center: { lat, lng, name: geo[0].display_name }, results };
+    type Place = {
+      id: string;
+      displayName?: { text?: string };
+      formattedAddress?: string;
+      location?: { latitude: number; longitude: number };
+      nationalPhoneNumber?: string;
+      internationalPhoneNumber?: string;
+      rating?: number;
+      userRatingCount?: number;
+      types?: string[];
+      primaryTypeDisplayName?: { text?: string };
+      websiteUri?: string;
+      googleMapsUri?: string;
+    };
+    const json = (await res.json()) as { places?: Place[] };
+    const places = json.places ?? [];
+
+    const results: DoctorHit[] = places
+      .filter((p) => p.location && p.displayName?.text)
+      .map((p) => ({
+        place_id: p.id,
+        name: p.displayName!.text!,
+        specialization:
+          p.primaryTypeDisplayName?.text ||
+          (p.types ?? []).find((t) => /doctor|clinic|hospital|dental|pharmacy|health/i.test(t))?.replace(/_/g, " "),
+        address: p.formattedAddress,
+        phone: p.nationalPhoneNumber || p.internationalPhoneNumber,
+        lat: p.location!.latitude,
+        lng: p.location!.longitude,
+        rating: p.rating,
+        user_ratings_total: p.userRatingCount,
+        website: p.websiteUri,
+        google_maps_uri: p.googleMapsUri,
+      }));
+
+    const center =
+      results.length > 0
+        ? { lat: results[0].lat, lng: results[0].lng, name: data.location }
+        : null;
+
+    return { center, results };
   });
 
 export const saveDoctor = createServerFn({ method: "POST" })
