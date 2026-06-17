@@ -2,15 +2,26 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { callGateway } from "./ai-gateway.server";
 
+export type MedicineKind = "specific" | "category" | "unknown";
+
 export type MedicineSummary = {
+  kind: MedicineKind;
   name: string;
   generic_name?: string;
-  uses: string;
-  dosage: string;
-  side_effects: string[];
-  warnings: string[];
-  interactions: string[];
-  alternatives: string[];
+  // Specific medicine fields
+  uses?: string;
+  dosage?: string;
+  side_effects?: string[];
+  warnings?: string[];
+  interactions?: string[];
+  alternatives?: string[];
+  // Category / drug class fields
+  category_label?: string; // "Drug Class" | "Medicine Category"
+  description?: string;
+  general_purpose?: string;
+  examples?: string[];
+  general_precautions?: string[];
+  variability_note?: string;
   disclaimer: string;
 };
 
@@ -54,23 +65,43 @@ export const searchMedicine = createServerFn({ method: "POST" })
       messages: [
         {
           role: "system",
-          content: `You are a clinical pharmacist explaining medicines to patients in plain English. Return STRICT JSON only with this schema:
+          content: `You are a careful clinical pharmacist. First CLASSIFY the user's input as one of:
+- "specific"  → a specific medicine / drug (e.g. Paracetamol, Amoxicillin, Dolo 650, Metformin)
+- "category"  → a drug class, treatment group, or medicine category (e.g. Antibiotics, Pain Relievers, Antidepressants, Antihistamines, Steroids, Vaccines, Chemotherapy Drugs, Orphan Drugs)
+- "unknown"   → reliable medicine information is unavailable
+
+Return STRICT JSON ONLY, no prose, no markdown. Schema:
 {
-  "name": string,
-  "generic_name": string,
-  "uses": string,                 // 1-2 sentence patient-friendly purpose
-  "dosage": string,               // typical adult dosage, 1 line
-  "side_effects": string[],       // 3-6 common ones
-  "warnings": string[],           // 2-5 important warnings
-  "interactions": string[],       // 2-5 notable drug/food interactions
-  "alternatives": string[],       // 2-4 commonly used alternatives
+  "kind": "specific" | "category" | "unknown",
+  "name": string,                      // canonical display name of the input
+  "generic_name"?: string,             // ONLY if kind == "specific"
+  // ---- specific only ----
+  "uses"?: string,                     // 1-2 sentence patient-friendly purpose
+  "dosage"?: string,                   // typical adult dosage, 1 line
+  "side_effects"?: string[],           // 3-6 common ones
+  "warnings"?: string[],               // 2-5 important warnings
+  "interactions"?: string[],           // 2-5 notable drug/food interactions
+  "alternatives"?: string[],           // 2-4 commonly used alternatives
+  // ---- category only ----
+  "category_label"?: "Drug Class" | "Medicine Category",
+  "description"?: string,              // what this class/category is
+  "general_purpose"?: string,          // what it is generally used for
+  "examples"?: string[],               // 4-8 example medicines in this class
+  "general_precautions"?: string[],    // 2-5 precautions that apply broadly
+  "variability_note"?: string,         // MUST be: "Dosage, side effects, interactions, warnings, and alternatives vary depending on the specific medicine within this category."
   "disclaimer": string
 }
-Use the OpenFDA context if provided. If the medicine is unknown, set name to the query and fill best-effort fields with "Unknown" or empty arrays.`,
+
+STRICT RULES:
+- Never treat a drug category as a specific medicine.
+- For "category", do NOT include dosage, side_effects, interactions, warnings, or alternatives — those vary per medicine.
+- For "specific", fill every specific field with reliable, well-known information. Use the OpenFDA context if provided.
+- If reliable medicine-specific data is unavailable, return kind="unknown" with disclaimer "Information unavailable. Please consult a healthcare professional or official prescribing information." and omit all other optional fields.
+- Never invent dosages, side effects, or interactions.`,
         },
         {
           role: "user",
-          content: `Medicine: ${data.query}\n\n${fdaContext}`,
+          content: `Input: ${data.query}\n\n${fdaContext}`,
         },
       ],
     });
