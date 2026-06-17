@@ -5,6 +5,7 @@ import {
   ScanLine, Brain, FileText, ChevronDown, Mail, ArrowRight,
 } from "lucide-react";
 import { Reveal } from "@/components/reveal";
+import heroImage from "@/assets/hero-3d.png";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
