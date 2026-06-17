@@ -63,31 +63,41 @@ function Hero() {
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--color-accent),_transparent_60%)] opacity-50" />
-      <div className="max-w-6xl mx-auto px-6 pt-20 pb-24 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card/60 backdrop-blur text-xs font-medium text-muted-foreground mb-6 animate-fade-up-blur">
-          <Sparkles className="w-3.5 h-3.5 text-primary" /> AI-powered healthcare clarity
+      <div className="max-w-6xl mx-auto px-6 pt-16 pb-20 md:pt-20 md:pb-24">
+        <div className="grid md:grid-cols-2 gap-10 items-center">
+          <div className="text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card/60 backdrop-blur text-xs font-medium text-muted-foreground mb-6 animate-fade-up-blur">
+              <Sparkles className="w-3.5 h-3.5 text-primary" /> AI-powered healthcare clarity
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight max-w-xl leading-[1.05] animate-fade-up-blur" style={{ animationDelay: '120ms' }}>
+              Understand your prescription <span className="text-primary">in plain English</span>
+            </h1>
+            <p className="text-lg text-muted-foreground mt-6 max-w-lg mx-auto md:mx-0 animate-fade-up-blur" style={{ animationDelay: '240ms' }}>
+              Upload a prescription, and Prescripto AI extracts the handwriting, explains each medicine, flags interactions, and helps you find the right doctor — instantly.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center md:justify-start gap-3 animate-fade-up-blur" style={{ animationDelay: '360ms' }}>
+              <Link to="/app" className="group inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold px-6 py-3.5 rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:-translate-y-0.5 transition">
+                <ScanLine className="w-4 h-4" /> Analyze Prescription
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+              </Link>
+              <Link to="/app" className="inline-flex items-center gap-2 bg-card border border-border font-semibold px-6 py-3.5 rounded-xl hover:bg-accent/40 transition">
+                <Search className="w-4 h-4" /> Search Medicines
+              </Link>
+            </div>
+            <p className="text-xs text-muted-foreground mt-6 flex items-center justify-center md:justify-start gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5" /> Information only. Not a substitute for medical advice.
+            </p>
+          </div>
+          <div className="relative flex items-center justify-center animate-fade-up-blur" style={{ animationDelay: '200ms' }}>
+            <img
+              src={heroImage}
+              alt="3D illustration of prescription analysis with floating pills and stethoscope"
+              className="w-full max-w-md md:max-w-lg lg:max-w-xl rounded-3xl animate-float-gentle shadow-2xl shadow-primary/10"
+              width={1024}
+              height={1024}
+            />
+          </div>
         </div>
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight max-w-4xl mx-auto leading-[1.05] animate-fade-up-blur" style={{ animationDelay: '120ms' }}>
-          Understand your prescription <span className="text-primary">in plain English</span>
-        </h1>
-        <p className="text-lg text-muted-foreground mt-6 max-w-2xl mx-auto animate-fade-up-blur" style={{ animationDelay: '240ms' }}>
-          Upload a prescription, and Prescripto AI extracts the handwriting, explains each medicine, flags interactions, and helps you find the right doctor — instantly.
-        </p>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3 animate-fade-up-blur" style={{ animationDelay: '360ms' }}>
-          <Link to="/app" className="group inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold px-6 py-3.5 rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:-translate-y-0.5 transition">
-            <ScanLine className="w-4 h-4" /> Analyze Prescription
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
-          </Link>
-          <Link to="/app" className="inline-flex items-center gap-2 bg-card border border-border font-semibold px-6 py-3.5 rounded-xl hover:bg-accent/40 transition">
-            <Search className="w-4 h-4" /> Search Medicines
-          </Link>
-          <Link to="/app" className="inline-flex items-center gap-2 bg-card border border-border font-semibold px-6 py-3.5 rounded-xl hover:bg-accent/40 transition">
-            <MapPin className="w-4 h-4" /> Find Doctors
-          </Link>
-        </div>
-        <p className="text-xs text-muted-foreground mt-6 flex items-center justify-center gap-1.5">
-          <ShieldCheck className="w-3.5 h-3.5" /> Information only. Not a substitute for medical advice.
-        </p>
       </div>
     </section>
   );
