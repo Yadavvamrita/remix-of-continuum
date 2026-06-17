@@ -289,6 +289,10 @@
   animation: subtle-pulse 2.5s ease-in-out infinite;
 }
 
+.animate-float-gentle {
+  animation: float-gentle 6s ease-in-out infinite;
+}
+
 .scroll-revealed {
   opacity: 1 !important;
   transform: translateY(0) !important;
