@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ScanLine, Search, MapPin, FileText, Pill, ArrowRight } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
+import { Reveal } from "@/components/reveal";
 
 export const Route = createFileRoute("/app")({
   component: DashboardPage,
@@ -28,8 +29,9 @@ function DashboardPage() {
       </div>
 
       <div className="grid sm:grid-cols-2 gap-5">
-          {tiles.map((t) => (
-            <Link key={t.title} to={t.to} className="group p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:-translate-y-0.5 transition relative overflow-hidden">
+          {tiles.map((t, i) => (
+            <Reveal key={t.title} delay={i * 90}>
+            <Link to={t.to} className="group block p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:-translate-y-0.5 transition relative overflow-hidden">
               <div className="w-11 h-11 rounded-xl bg-accent/60 flex items-center justify-center">
                 <t.icon className="w-5 h-5 text-primary" strokeWidth={2.25} />
               </div>
@@ -39,10 +41,11 @@ function DashboardPage() {
                 Open <ArrowRight className="w-3.5 h-3.5" />
               </div>
             </Link>
+            </Reveal>
           ))}
         </div>
 
-        <div className="mt-12 p-6 rounded-2xl border border-border bg-gradient-to-br from-accent/40 to-card">
+        <Reveal delay={200} className="mt-12 p-6 rounded-2xl border border-border bg-gradient-to-br from-accent/40 to-card block">
           <div className="flex items-start gap-4">
             <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
               <Pill className="w-5 h-5 text-primary" />
@@ -54,7 +57,7 @@ function DashboardPage() {
               </p>
             </div>
           </div>
-        </div>
+        </Reveal>
     </AppShell>
   );
 }
