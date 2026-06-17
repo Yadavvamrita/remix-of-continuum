@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, Loader2, Pill, Bookmark, ArrowLeft, AlertTriangle } from "lucide-react";
+import { Search, Loader2, Pill, Bookmark, ArrowLeft, AlertTriangle, Tag, Info } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { AppShell } from "@/components/app-shell";
@@ -70,23 +70,56 @@ function MedicinesPage() {
         <div className="mt-8 max-w-3xl rounded-2xl border border-border bg-card p-6 space-y-5">
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-accent/60 flex items-center justify-center"><Pill className="w-5 h-5 text-primary" /></div>
+              <div className="w-10 h-10 rounded-lg bg-accent/60 flex items-center justify-center">
+                {result.kind === "category" ? <Tag className="w-5 h-5 text-primary" /> : <Pill className="w-5 h-5 text-primary" />}
+              </div>
               <div>
                 <div className="font-semibold text-lg">{result.name}</div>
-                {result.generic_name && <div className="text-xs text-muted-foreground">Generic: {result.generic_name}</div>}
+                <div className="mt-1 flex items-center gap-2">
+                  <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${result.kind === "specific" ? "border-primary/40 text-primary bg-primary/10" : result.kind === "category" ? "border-amber-500/40 text-amber-600 bg-amber-500/10" : "border-border text-muted-foreground"}`}>
+                    Type: {result.kind === "specific" ? "Specific Medicine" : result.kind === "category" ? (result.category_label || "Drug Class / Medicine Category") : "Unknown"}
+                  </span>
+                  {result.kind === "specific" && result.generic_name && (
+                    <span className="text-xs text-muted-foreground">Generic: {result.generic_name}</span>
+                  )}
+                </div>
               </div>
             </div>
-            <button onClick={onSave} className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-border hover:bg-accent/40 transition">
-              <Bookmark className="w-3.5 h-3.5" /> Save
-            </button>
+            {result.kind !== "unknown" && (
+              <button onClick={onSave} className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-border hover:bg-accent/40 transition">
+                <Bookmark className="w-3.5 h-3.5" /> Save
+              </button>
+            )}
           </div>
 
-          <Field label="Uses">{result.uses}</Field>
-          <Field label="Dosage">{result.dosage}</Field>
-          <ListField label="Common side effects" items={result.side_effects} />
-          <ListField label="Warnings" items={result.warnings} />
-          <ListField label="Interactions" items={result.interactions} />
-          <ListField label="Alternatives" items={result.alternatives} />
+          {result.kind === "specific" && (
+            <>
+              <Field label="Uses">{result.uses}</Field>
+              <Field label="Dosage">{result.dosage}</Field>
+              <ListField label="Common side effects" items={result.side_effects} />
+              <ListField label="Warnings" items={result.warnings} />
+              <ListField label="Interactions" items={result.interactions} />
+              <ListField label="Alternatives" items={result.alternatives} />
+            </>
+          )}
+
+          {result.kind === "category" && (
+            <>
+              <Field label="Description">{result.description}</Field>
+              <Field label="General purpose">{result.general_purpose}</Field>
+              <ListField label="Examples in this category" items={result.examples} />
+              <ListField label="General precautions" items={result.general_precautions} />
+              {result.variability_note && (
+                <p className="text-sm rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300 p-3 flex items-start gap-2">
+                  <Info className="w-4 h-4 mt-0.5 shrink-0" /> {result.variability_note}
+                </p>
+              )}
+            </>
+          )}
+
+          {result.kind === "unknown" && (
+            <p className="text-sm text-muted-foreground">Information unavailable. Please consult a healthcare professional or official prescribing information.</p>
+          )}
 
           <p className="text-xs text-muted-foreground italic flex items-start gap-1.5 pt-2 border-t border-border">
             <AlertTriangle className="w-3.5 h-3.5 mt-0.5 shrink-0" /> {result.disclaimer}
