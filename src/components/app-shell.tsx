@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { Stethoscope, LogOut, UserCircle } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useEffect, type ReactNode } from "react";
@@ -6,6 +6,7 @@ import { useEffect, type ReactNode } from "react";
 export function AppShell({ children }: { children: ReactNode }) {
   const { user, isLoading, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (!isLoading && !user) navigate({ to: "/login" });
@@ -43,7 +44,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </div>
       </header>
-      <main className="max-w-6xl mx-auto px-6 py-10">{children}</main>
+      <main key={location.pathname} className="max-w-6xl mx-auto px-6 py-10 animate-page-enter">{children}</main>
     </div>
   );
 }

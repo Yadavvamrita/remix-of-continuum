@@ -4,6 +4,7 @@ import {
   Stethoscope, Upload, Search, MapPin, Pill, ShieldCheck, Sparkles,
   ScanLine, Brain, FileText, ChevronDown, Mail, ArrowRight,
 } from "lucide-react";
+import { Reveal } from "@/components/reveal";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
@@ -62,16 +63,16 @@ function Hero() {
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--color-accent),_transparent_60%)] opacity-50" />
       <div className="max-w-6xl mx-auto px-6 pt-20 pb-24 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card/60 backdrop-blur text-xs font-medium text-muted-foreground mb-6">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card/60 backdrop-blur text-xs font-medium text-muted-foreground mb-6 animate-fade-up-blur">
           <Sparkles className="w-3.5 h-3.5 text-primary" /> AI-powered healthcare clarity
         </div>
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight max-w-4xl mx-auto leading-[1.05]">
+        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight max-w-4xl mx-auto leading-[1.05] animate-fade-up-blur" style={{ animationDelay: '120ms' }}>
           Understand your prescription <span className="text-primary">in plain English</span>
         </h1>
-        <p className="text-lg text-muted-foreground mt-6 max-w-2xl mx-auto">
+        <p className="text-lg text-muted-foreground mt-6 max-w-2xl mx-auto animate-fade-up-blur" style={{ animationDelay: '240ms' }}>
           Upload a prescription, and Prescripto AI extracts the handwriting, explains each medicine, flags interactions, and helps you find the right doctor — instantly.
         </p>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-3 animate-fade-up-blur" style={{ animationDelay: '360ms' }}>
           <Link to="/app" className="group inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold px-6 py-3.5 rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:-translate-y-0.5 transition">
             <ScanLine className="w-4 h-4" /> Analyze Prescription
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
@@ -102,16 +103,18 @@ function Features() {
   ];
   return (
     <section id="features" className="max-w-6xl mx-auto px-6 py-20">
-      <SectionHeader eyebrow="Features" title="A complete healthcare companion" subtitle="Six capabilities working together to bring clarity to every prescription." />
+      <Reveal><SectionHeader eyebrow="Features" title="A complete healthcare companion" subtitle="Six capabilities working together to bring clarity to every prescription." /></Reveal>
       <div className="grid md:grid-cols-3 gap-5 mt-12">
-        {items.map((f) => (
-          <div key={f.title} className="p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:-translate-y-0.5 transition">
-            <div className="w-10 h-10 rounded-lg bg-accent/60 flex items-center justify-center mb-4">
-              <f.icon className="w-5 h-5 text-primary" strokeWidth={2.25} />
+        {items.map((f, i) => (
+          <Reveal key={f.title} delay={i * 80}>
+            <div className="p-6 rounded-2xl border border-border bg-card hover:shadow-lg hover:-translate-y-0.5 transition h-full">
+              <div className="w-10 h-10 rounded-lg bg-accent/60 flex items-center justify-center mb-4">
+                <f.icon className="w-5 h-5 text-primary" strokeWidth={2.25} />
+              </div>
+              <h3 className="font-semibold text-base">{f.title}</h3>
+              <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{f.desc}</p>
             </div>
-            <h3 className="font-semibold text-base">{f.title}</h3>
-            <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{f.desc}</p>
-          </div>
+          </Reveal>
         ))}
       </div>
     </section>
@@ -128,15 +131,17 @@ function HowItWorks() {
   return (
     <section id="how" className="bg-secondary/40 border-y border-border/60">
       <div className="max-w-6xl mx-auto px-6 py-20">
-        <SectionHeader eyebrow="How it works" title="From paper to plain English in seconds" subtitle="Four steps. Zero medical jargon." />
+        <Reveal><SectionHeader eyebrow="How it works" title="From paper to plain English in seconds" subtitle="Four steps. Zero medical jargon." /></Reveal>
         <div className="grid md:grid-cols-4 gap-4 mt-12">
-          {steps.map((s) => (
-            <div key={s.n} className="p-6 rounded-2xl bg-card border border-border">
-              <div className="text-xs font-mono text-primary font-bold">{s.n}</div>
-              <s.icon className="w-6 h-6 text-foreground mt-3" strokeWidth={2} />
-              <h3 className="font-semibold mt-3">{s.title}</h3>
-              <p className="text-sm text-muted-foreground mt-1">{s.desc}</p>
-            </div>
+          {steps.map((s, i) => (
+            <Reveal key={s.n} delay={i * 100}>
+              <div className="p-6 rounded-2xl bg-card border border-border h-full">
+                <div className="text-xs font-mono text-primary font-bold">{s.n}</div>
+                <s.icon className="w-6 h-6 text-foreground mt-3" strokeWidth={2} />
+                <h3 className="font-semibold mt-3">{s.title}</h3>
+                <p className="text-sm text-muted-foreground mt-1">{s.desc}</p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -148,7 +153,7 @@ function MedicineIntelligence() {
   return (
     <section id="medicines" className="max-w-6xl mx-auto px-6 py-20">
       <div className="grid md:grid-cols-2 gap-12 items-center">
-        <div>
+        <Reveal>
           <SectionHeader eyebrow="Medicine intelligence" title="Search any medicine. Get the full picture." subtitle="Generic names, brand alternatives, uses, side effects, interactions, pregnancy warnings — all in one place." align="left" />
           <ul className="mt-6 space-y-3 text-sm">
             {["Dolo 650","Paracetamol","Azithromycin","Metformin","Amoxicillin"].map((m) => (
@@ -157,8 +162,8 @@ function MedicineIntelligence() {
               </li>
             ))}
           </ul>
-        </div>
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-xl shadow-primary/5">
+        </Reveal>
+        <Reveal delay={150} className="rounded-2xl border border-border bg-card p-6 shadow-xl shadow-primary/5">
           <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-secondary text-sm">
             <Search className="w-4 h-4 text-muted-foreground" />
             <span className="text-muted-foreground">Search Amoxicillin…</span>
@@ -170,7 +175,7 @@ function MedicineIntelligence() {
             <Row k="Side effects" v="Nausea, diarrhea, rash" />
             <Row k="Warnings" v="Avoid if allergic to penicillin" />
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -189,13 +194,15 @@ function DoctorFinder() {
   return (
     <section id="doctors" className="bg-secondary/40 border-y border-border/60">
       <div className="max-w-6xl mx-auto px-6 py-20">
-        <SectionHeader eyebrow="Doctor finder" title="The right specialist, near you" subtitle="Search by name, city, or specialization. Maps, ratings, and contact info — all in one view." />
+        <Reveal><SectionHeader eyebrow="Doctor finder" title="The right specialist, near you" subtitle="Search by name, city, or specialization. Maps, ratings, and contact info — all in one view." /></Reveal>
         <div className="mt-10 grid sm:grid-cols-3 gap-4">
-          {["Cardiologist in Delhi","Dermatologist in Noida","Pediatrician in Mumbai"].map((q) => (
-            <div key={q} className="p-5 rounded-xl bg-card border border-border flex items-center gap-3">
-              <MapPin className="w-5 h-5 text-primary" />
-              <span className="text-sm font-medium">{q}</span>
-            </div>
+          {["Cardiologist in Delhi","Dermatologist in Noida","Pediatrician in Mumbai"].map((q, i) => (
+            <Reveal key={q} delay={i * 100}>
+              <div className="p-5 rounded-xl bg-card border border-border flex items-center gap-3">
+                <MapPin className="w-5 h-5 text-primary" />
+                <span className="text-sm font-medium">{q}</span>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -213,10 +220,10 @@ function FAQ() {
   ];
   return (
     <section id="faq" className="max-w-3xl mx-auto px-6 py-20">
-      <SectionHeader eyebrow="FAQ" title="Common questions" />
+      <Reveal><SectionHeader eyebrow="FAQ" title="Common questions" /></Reveal>
       <div className="mt-10 space-y-3">
         {qs.map((item, i) => (
-          <FaqItem key={i} q={item.q} a={item.a} />
+          <Reveal key={i} delay={i * 60}><FaqItem q={item.q} a={item.a} /></Reveal>
         ))}
       </div>
     </section>
@@ -240,10 +247,12 @@ function Contact() {
   return (
     <section id="contact" className="bg-secondary/40 border-y border-border/60">
       <div className="max-w-3xl mx-auto px-6 py-20 text-center">
-        <SectionHeader eyebrow="Contact" title="Talk to us" subtitle="Questions, partnerships, or feedback? We'd love to hear from you." />
-        <a href="mailto:hello@prescripto.ai" className="inline-flex items-center gap-2 mt-6 bg-primary text-primary-foreground font-semibold px-5 py-3 rounded-xl hover:opacity-90 transition">
-          <Mail className="w-4 h-4" /> hello@prescripto.ai
-        </a>
+        <Reveal>
+          <SectionHeader eyebrow="Contact" title="Talk to us" subtitle="Questions, partnerships, or feedback? We'd love to hear from you." />
+          <a href="mailto:hello@prescripto.ai" className="inline-flex items-center gap-2 mt-6 bg-primary text-primary-foreground font-semibold px-5 py-3 rounded-xl hover:opacity-90 transition">
+            <Mail className="w-4 h-4" /> hello@prescripto.ai
+          </a>
+        </Reveal>
       </div>
     </section>
   );
