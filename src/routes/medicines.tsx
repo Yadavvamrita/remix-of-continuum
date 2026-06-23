@@ -8,7 +8,17 @@ import { searchMedicine, saveMedicine, type MedicineSummary } from "@/lib/medici
 
 export const Route = createFileRoute("/medicines")({
   component: MedicinesPage,
-  head: () => ({ meta: [{ title: "Search medicines — Prescripto AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Search medicines — Prescripto AI" },
+      { name: "description", content: "Look up any medicine — uses, dosage, side effects, interactions, and alternatives, backed by OpenFDA and RxNorm." },
+      { property: "og:title", content: "Search medicines — Prescripto AI" },
+      { property: "og:description", content: "Look up any medicine — uses, dosage, side effects, interactions, and alternatives." },
+      { property: "og:url", content: "https://prescriptoo-ai.lovable.app/medicines" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://prescriptoo-ai.lovable.app/medicines" }],
+  }),
 });
 
 function MedicinesPage() {
@@ -58,6 +68,7 @@ function MedicinesPage() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="e.g. Amoxicillin, Dolo 650, Metformin"
+            aria-label="Medicine name"
             className="bg-transparent outline-none flex-1 text-sm"
           />
         </div>
