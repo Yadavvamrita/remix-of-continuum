@@ -9,7 +9,13 @@ export const Route = createFileRoute("/app")({
     meta: [
       { title: "Dashboard — Prescripto AI" },
       { name: "description", content: "Analyze prescriptions, search medicines, and find doctors." },
+      { property: "og:title", content: "Dashboard — Prescripto AI" },
+      { property: "og:description", content: "Analyze prescriptions, search medicines, and find doctors." },
+      { property: "og:url", content: "https://prescriptoo-ai.lovable.app/app" },
+      { property: "og:type", content: "website" },
+      { name: "robots", content: "noindex" },
     ],
+    links: [{ rel: "canonical", href: "https://prescriptoo-ai.lovable.app/app" }],
   }),
 });
 
@@ -28,6 +34,7 @@ function DashboardPage() {
           <p className="text-muted-foreground mt-1.5">What would you like to do today?</p>
       </div>
 
+      <h2 className="sr-only">Quick actions</h2>
       <div className="grid sm:grid-cols-2 gap-5">
           {tiles.map((t, i) => (
             <Reveal key={t.title} delay={i * 90}>

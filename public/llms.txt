@@ -1,0 +1,11 @@
+# Prescripto AI
+
+> AI-powered prescription analysis, universal medicine search, and doctor finder for patients.
+
+Prescripto AI helps people understand handwritten prescriptions in plain English, look up any medicine (uses, dosage, side effects, interactions), and find verified doctors and clinics nearby.
+
+## Pages
+
+- [Home](/): Product overview, features, how it works, and FAQ.
+- [Medicines](/medicines): Search any medicine for uses, dosage, side effects, interactions, and alternatives.
+- [Doctors](/doctors): Find clinics and specialists by city and specialization.

@@ -12,7 +12,13 @@ export const Route = createFileRoute("/insights")({
     meta: [
       { title: "History — Prescripto AI" },
       { name: "description", content: "Your past prescription analyses and saved items." },
+      { property: "og:title", content: "History — Prescripto AI" },
+      { property: "og:description", content: "Your past prescription analyses and saved medicines." },
+      { property: "og:url", content: "https://prescriptoo-ai.lovable.app/insights" },
+      { property: "og:type", content: "website" },
+      { name: "robots", content: "noindex" },
     ],
+    links: [{ rel: "canonical", href: "https://prescriptoo-ai.lovable.app/insights" }],
   }),
 });
 

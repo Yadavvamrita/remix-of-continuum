@@ -8,7 +8,17 @@ import { searchDoctors, saveDoctor, type DoctorHit } from "@/lib/doctors.functio
 
 export const Route = createFileRoute("/doctors")({
   component: DoctorsPage,
-  head: () => ({ meta: [{ title: "Find doctors — Prescripto AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Find doctors — Prescripto AI" },
+      { name: "description", content: "Search verified clinics, hospitals, and specialists near any city with maps, ratings, and contact info." },
+      { property: "og:title", content: "Find doctors — Prescripto AI" },
+      { property: "og:description", content: "Search verified clinics, hospitals, and specialists near any city with maps, ratings, and contact info." },
+      { property: "og:url", content: "https://prescriptoo-ai.lovable.app/doctors" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://prescriptoo-ai.lovable.app/doctors" }],
+  }),
 });
 
 function DoctorsPage() {
@@ -49,12 +59,14 @@ function DoctorsPage() {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           placeholder="City or area (e.g. Delhi, Bengaluru)"
+          aria-label="City or area"
           className="px-4 py-3 rounded-xl border border-border bg-card outline-none text-sm focus:border-primary"
         />
         <input
           value={spec}
           onChange={(e) => setSpec(e.target.value)}
           placeholder="Specialization (optional, e.g. cardiology)"
+          aria-label="Specialization"
           className="px-4 py-3 rounded-xl border border-border bg-card outline-none text-sm focus:border-primary"
         />
         <button disabled={busy || location.trim().length < 2} className="bg-primary text-primary-foreground font-semibold px-5 rounded-xl hover:opacity-90 transition disabled:opacity-50">

@@ -9,7 +9,17 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/analyze")({
   component: AnalyzePage,
-  head: () => ({ meta: [{ title: "Analyze prescription — Prescripto AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Analyze prescription — Prescripto AI" },
+      { name: "description", content: "Upload a prescription photo and let AI extract handwriting, explain each medicine, and flag interactions in seconds." },
+      { property: "og:title", content: "Analyze prescription — Prescripto AI" },
+      { property: "og:description", content: "Upload a prescription photo and let AI extract handwriting, explain each medicine, and flag interactions in seconds." },
+      { property: "og:url", content: "https://prescriptoo-ai.lovable.app/analyze" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://prescriptoo-ai.lovable.app/analyze" }],
+  }),
 });
 
 type Analysis = {
@@ -66,6 +76,7 @@ function AnalyzePage() {
 
       <div className="grid lg:grid-cols-2 gap-6 mt-8">
         <div className="rounded-2xl border border-border bg-card p-6">
+          <h2 className="sr-only">Upload prescription</h2>
           <label className="block">
             <div className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:bg-accent/30 transition">
               {preview ? (

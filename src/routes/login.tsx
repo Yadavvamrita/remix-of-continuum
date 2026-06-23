@@ -13,8 +13,13 @@ export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
       { title: "Sign in — Prescripto AI" },
-      { name: "description", content: "Sign in or create your Prescripto AI account." },
+      { name: "description", content: "Sign in or create your Prescripto AI account to analyze prescriptions, search medicines, and save your history." },
+      { property: "og:title", content: "Sign in — Prescripto AI" },
+      { property: "og:description", content: "Sign in or create your Prescripto AI account to analyze prescriptions and search medicines." },
+      { property: "og:url", content: "https://prescriptoo-ai.lovable.app/login" },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: "https://prescriptoo-ai.lovable.app/login" }],
   }),
 });
 
@@ -142,6 +147,7 @@ function LoginPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Full name"
+                aria-label="Full name"
                 className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 maxLength={80}
               />
@@ -153,6 +159,7 @@ function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
+                aria-label="Email"
                 className="w-full rounded-xl border border-input bg-background pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 required maxLength={254}
               />
@@ -164,10 +171,11 @@ function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
+                aria-label="Password"
                 className="w-full rounded-xl border border-input bg-background pl-11 pr-11 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 required minLength={isSignUp ? 8 : 6} maxLength={128}
               />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+              <button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
@@ -179,6 +187,7 @@ function LoginPage() {
                   value={confirm}
                   onChange={(e) => setConfirm(e.target.value)}
                   placeholder="Confirm password"
+                  aria-label="Confirm password"
                   className="w-full rounded-xl border border-input bg-background pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                   required minLength={8} maxLength={128}
                 />

@@ -9,8 +9,14 @@ export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
       { title: "Settings — Prescripto AI" },
-      { name: "description", content: "Manage your Prescripto AI account." },
+      { name: "description", content: "Manage your Prescripto AI account, review your session, and sign out from this device." },
+      { property: "og:title", content: "Settings — Prescripto AI" },
+      { property: "og:description", content: "Manage your Prescripto AI account and preferences." },
+      { property: "og:url", content: "https://prescriptoo-ai.lovable.app/settings" },
+      { property: "og:type", content: "website" },
+      { name: "robots", content: "noindex" },
     ],
+    links: [{ rel: "canonical", href: "https://prescriptoo-ai.lovable.app/settings" }],
   }),
 });
 

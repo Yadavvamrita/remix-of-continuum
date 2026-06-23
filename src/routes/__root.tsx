@@ -8,12 +8,10 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "Prescripto AI — Understand your prescriptions, instantly" },
-      { name: "description", content: "Upload a prescription and let AI explain your medicines, doses, side effects, and find doctors near you." },
+      { title: "Prescripto AI" },
       { name: "author", content: "Prescripto AI" },
-      { property: "og:title", content: "Prescripto AI — Understand your prescriptions, instantly" },
-      { property: "og:description", content: "Upload a prescription and let AI explain your medicines, doses, side effects, and find doctors near you." },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Prescripto AI" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
@@ -21,6 +19,18 @@ export const Route = createRootRoute({
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" },
       { rel: "stylesheet", href: appCss },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Prescripto AI",
+          url: "https://prescriptoo-ai.lovable.app",
+          description: "AI-powered prescription analysis, universal medicine search, and doctor finder.",
+        }),
+      },
     ],
   }),
   shellComponent: RootShell,

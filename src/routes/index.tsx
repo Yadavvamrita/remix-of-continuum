@@ -13,6 +13,36 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "Prescripto AI — Understand your prescriptions, instantly" },
       { name: "description", content: "AI-powered prescription analysis, universal medicine search, and doctor finder. Built for patients who want clarity." },
+      { property: "og:title", content: "Prescripto AI — Understand your prescriptions, instantly" },
+      { property: "og:description", content: "AI-powered prescription analysis, universal medicine search, and doctor finder. Built for patients who want clarity." },
+      { property: "og:url", content: "https://prescriptoo-ai.lovable.app/" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://prescriptoo-ai.lovable.app/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Prescripto AI",
+          url: "https://prescriptoo-ai.lovable.app",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            { "@type": "Question", name: "Is Prescripto AI a substitute for a doctor?", acceptedAnswer: { "@type": "Answer", text: "No. Prescripto AI helps you understand prescriptions, but it does not replace professional medical advice, diagnosis, or treatment." } },
+            { "@type": "Question", name: "What file types can I upload?", acceptedAnswer: { "@type": "Answer", text: "JPG, PNG, JPEG, and PDF. Clear photos work best for handwritten prescriptions." } },
+            { "@type": "Question", name: "Where does medicine information come from?", acceptedAnswer: { "@type": "Answer", text: "We combine OpenFDA, RxNorm, and NIH medication APIs with AI-generated patient-friendly explanations." } },
+            { "@type": "Question", name: "Are my prescriptions private?", acceptedAnswer: { "@type": "Answer", text: "Yes. Your files and analyses are stored securely and visible only to you." } },
+            { "@type": "Question", name: "Is it free to use?", acceptedAnswer: { "@type": "Answer", text: "The core experience is free. Heavy usage may be metered to keep AI costs sustainable." } },
+          ],
+        }),
+      },
     ],
   }),
 });
